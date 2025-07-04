@@ -3,17 +3,27 @@ import ChatSidebar from '../components/ChatSidebar';
 import ChatHeader from '../components/ChatHeader';
 import ChatMessages from '../components/ChatMessages';
 import ChatInput from '../components/ChatInput';
+import PerfilUsuario from '../components/PerfilUsuario';
+import PerfilContacto from '../components/PerfilContacto';
 
+// Datos de ejemplo
 const dummyUser = {
   name: 'Isaac Llanda',
-  email: 'isaac@example.com',
-  // puedes agregar avatar, estado, etc aquí
+  email: 'isaac.llanda@example.com',
+  avatar: 'https://i.pravatar.cc/150?img=7',
 };
 
 const dummyChats = [
-  { id: 1, name: 'Carlos', lastMessage: '¿Cómo estás?', unread: 2 },
-  { id: 2, name: 'Ana', lastMessage: 'Nos vemos mañana', unread: 0 },
-  { id: 3, name: 'Luis', lastMessage: 'Ok, gracias!', unread: 1 },
+  {
+    id: 1,
+    name: 'Carlos',
+    lastMessage: '¿Cómo estás?',
+    unread: 2,
+    avatar: 'https://i.pravatar.cc/150?img=12',
+    isOnline: true,
+    lastSeen: 'Hace 5 minutos',
+  },
+  // ... otros chats
 ];
 
 const dummyMessages = [
@@ -24,10 +34,14 @@ const dummyMessages = [
 
 const Chats = () => {
   const [user] = useState(dummyUser);
-  const [chats, setChats] = useState(dummyChats);
+  const [chats] = useState(dummyChats);
   const [activeChat, setActiveChat] = useState(chats[0]);
   const [messages, setMessages] = useState(dummyMessages);
   const [newMessage, setNewMessage] = useState('');
+
+  // Estados para mostrar perfil
+  const [showPerfilUsuario, setShowPerfilUsuario] = useState(false);
+  const [showPerfilContacto, setShowPerfilContacto] = useState(false);
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -36,32 +50,24 @@ const Chats = () => {
     setNewMessage('');
   };
 
-  // Funciones para acciones del sidebar (simuladas)
-  const handleDeleteChat = (chatId) => {
-    if (window.confirm('¿Eliminar este chat?')) {
-      const filteredChats = chats.filter(c => c.id !== chatId);
-      setChats(filteredChats);
-      if (activeChat.id === chatId && filteredChats.length > 0) {
-        setActiveChat(filteredChats[0]);
-      }
-    }
+  // Funciones para abrir perfiles
+  const abrirPerfilUsuario = () => {
+    setShowPerfilUsuario(true);
+    setShowPerfilContacto(false);
   };
 
-  const handleArchiveChat = (chatId) => {
-    alert(`Chat ${chatId} archivado (simulado)`);
-    // Aquí podrías implementar lógica real para archivar
+  const abrirPerfilContacto = () => {
+    setShowPerfilContacto(true);
+    setShowPerfilUsuario(false);
   };
 
-  const handleViewProfile = () => {
-    alert('Mostrar perfil del usuario logeado (simulado)');
-    // Aquí mostrar modal o navegar a perfil
+  // Funciones para cerrar perfiles
+  const cerrarPerfiles = () => {
+    setShowPerfilUsuario(false);
+    setShowPerfilContacto(false);
   };
 
-  const handleLogout = () => {
-    alert('Cerrar sesión (simulado)');
-    // Aquí redireccionar a login o limpiar sesión
-  };
-
+  // Pasa estas funciones a ChatSidebar y ChatHeader
   return (
     <div
       className="d-flex"
@@ -73,40 +79,45 @@ const Chats = () => {
         overflow: 'hidden',
       }}
     >
-      <ChatSidebar
-        user={user}
-        chats={chats}
-        activeChat={activeChat}
-        onSelectChat={setActiveChat}
-        onDeleteChat={handleDeleteChat}
-        onArchiveChat={handleArchiveChat}
-        onViewProfile={handleViewProfile}
-        onLogout={handleLogout}
-      />
+      {!showPerfilUsuario && !showPerfilContacto && (
+        <>
+          <ChatSidebar
+            user={user}
+            chats={chats}
+            activeChat={activeChat}
+            onSelectChat={setActiveChat}
+            onViewProfile={abrirPerfilUsuario} // botón ver perfil usuario
+            onLogout={() => alert('Cerrar sesión')} // ejemplo
+          />
 
-      <section className="d-flex flex-column flex-grow-1" style={{ height: '100vh' }}>
-        <ChatHeader chat={activeChat} />
-        <ChatMessages messages={messages} />
-        <ChatInput
-          message={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          onSend={sendMessage}
-        />
+          <section className="d-flex flex-column flex-grow-1" style={{ height: '100vh' }}>
+            <ChatHeader chat={activeChat} onViewContactProfile={abrirPerfilContacto} />
+            <ChatMessages messages={messages} />
+            <ChatInput
+              message={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onSend={sendMessage}
+            />
 
-        <style>{`
-          main::-webkit-scrollbar {
-            width: 8px;
-          }
-          main::-webkit-scrollbar-thumb {
-            background-color: rgba(255,255,255,0.3);
-            border-radius: 20px;
-          }
-          @keyframes fadeIn {
-            from {opacity: 0; transform: translateY(10px);}
-            to {opacity: 1; transform: translateY(0);}
-          }
-        `}</style>
-      </section>
+            <style>{`
+              main::-webkit-scrollbar {
+                width: 8px;
+              }
+              main::-webkit-scrollbar-thumb {
+                background-color: rgba(255,255,255,0.3);
+                border-radius: 20px;
+              }
+              @keyframes fadeIn {
+                from {opacity: 0; transform: translateY(10px);}
+                to {opacity: 1; transform: translateY(0);}
+              }
+            `}</style>
+          </section>
+        </>
+      )}
+
+      {showPerfilUsuario && <PerfilUsuario user={user} onClose={cerrarPerfiles} />}
+      {showPerfilContacto && <PerfilContacto contacto={activeChat} onClose={cerrarPerfiles} />}
     </div>
   );
 };
