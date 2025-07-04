@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaEnvelope, FaLock } from 'react-icons/fa';
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaComments } from 'react-icons/fa';
 
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí iría la lógica real de login
+    // Lógica real de login
     navigate('/chats');
   };
 
@@ -23,16 +24,18 @@ const Login = () => {
     >
       <div
         className="card shadow-lg p-4"
-        style={{
-          width: '100%',
-          maxWidth: '400px',
-          borderRadius: '1rem',
-        }}
+        style={{ maxWidth: '400px', width: '100%', borderRadius: '1rem' }}
       >
-        <h3 className="mb-4 text-center text-primary">Iniciar sesión</h3>
+        {/* Título o logo */}
+        <div className="text-center mb-4">
+          <FaComments size={40} className="text-primary mb-2" />
+          <h2 className="fw-bold text-primary mb-0">MensajeríaApp</h2>
+          <p className="text-muted small">Conéctate con quien quieras</p>
+        </div>
 
+        {/* Formulario */}
         <form onSubmit={handleSubmit}>
-          {/* Input: Email */}
+          {/* Email */}
           <div className="mb-3">
             <label htmlFor="email" className="form-label fw-semibold">
               Correo electrónico
@@ -53,7 +56,7 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Input: Password */}
+          {/* Contraseña */}
           <div className="mb-4">
             <label htmlFor="password" className="form-label fw-semibold">
               Contraseña
@@ -63,7 +66,7 @@ const Login = () => {
                 <FaLock />
               </span>
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 className="form-control"
                 id="password"
                 placeholder="Contraseña"
@@ -71,22 +74,31 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
           </div>
 
-          {/* Botón: Enviar */}
-          <button
-            type="submit"
-            className="btn btn-primary w-100 py-2 fw-bold"
-          >
+          {/* Botón Ingresar */}
+          <button type="submit" className="btn btn-primary w-100 py-2 fw-bold">
             Ingresar
           </button>
         </form>
 
-        {/* Link: Olvidaste tu contraseña */}
+        {/* Links */}
         <div className="mt-3 text-center">
-          <Link to="/forgot-password" className="text-decoration-none">
+          <Link to="/forgot-password" className="text-decoration-none d-block mb-1">
             ¿Olvidaste tu contraseña?
+          </Link>
+          <span className="text-muted">¿No tienes cuenta? </span>
+          <Link to="/register" className="text-decoration-none">
+            Regístrate aquí
           </Link>
         </div>
       </div>
