@@ -6,30 +6,67 @@ import ChatInput from '../components/ChatInput';
 import PerfilUsuario from '../components/PerfilUsuario';
 import PerfilContacto from '../components/PerfilContacto';
 
-// Datos de ejemplo
+// Datos de ejemplo actualizados
 const dummyUser = {
-  name: 'Isaac Llanda',
-  email: 'isaac.llanda@example.com',
-  avatar: 'https://i.pravatar.cc/150?img=7',
+  name: 'María González',
+  email: 'maria.gonzalez@example.com',
+  avatar: 'https://i.pravatar.cc/150?img=15',
 };
 
 const dummyChats = [
   {
     id: 1,
-    name: 'Carlos',
-    lastMessage: '¿Cómo estás?',
-    unread: 2,
-    avatar: 'https://i.pravatar.cc/150?img=12',
+    name: 'Alejandro',
+    lastMessage: '¿Vamos a la reunión mañana?',
+    unread: 1,
+    avatar: 'https://i.pravatar.cc/150?img=21',
     isOnline: true,
-    lastSeen: 'Hace 5 minutos',
+    lastSeen: 'Hace 2 minutos',
   },
-  // ... otros chats
+  {
+    id: 2,
+    name: 'Lucía',
+    lastMessage: 'Perfecto, te veo a las 3.',
+    unread: 0,
+    avatar: 'https://i.pravatar.cc/150?img=32',
+    isOnline: false,
+    lastSeen: 'Hace 1 hora',
+  },
+  {
+    id: 3,
+    name: 'Juan Pérez',
+    lastMessage: '¿Me enviaste el archivo?',
+    unread: 3,
+    avatar: 'https://i.pravatar.cc/150?img=9',
+    isOnline: true,
+    lastSeen: 'Hace 10 segundos',
+  },
+  {
+    id: 4,
+    name: 'Sofía Martínez',
+    lastMessage: 'Gracias por la ayuda.',
+    unread: 0,
+    avatar: 'https://i.pravatar.cc/150?img=43',
+    isOnline: false,
+    lastSeen: 'Ayer',
+  },
+  {
+    id: 5,
+    name: 'Carlos Rivera',
+    lastMessage: 'Nos vemos luego.',
+    unread: 0,
+    avatar: 'https://i.pravatar.cc/150?img=5',
+    isOnline: true,
+    lastSeen: 'Hace 3 minutos',
+  },
 ];
 
 const dummyMessages = [
-  { id: 1, fromMe: false, text: 'Hola, ¿qué tal?' },
+  { id: 1, fromMe: false, text: 'Hola, ¿cómo te fue hoy?' },
   { id: 2, fromMe: true, text: 'Bien, gracias. ¿Y tú?' },
-  { id: 3, fromMe: false, text: 'Todo bien, aquí trabajando.' },
+  { id: 3, fromMe: false, text: 'Muy bien, estuve ocupado con trabajo.' },
+  { id: 4, fromMe: true, text: '¿Quieres que te ayude con algo?' },
+  { id: 5, fromMe: false, text: 'Sí, por favor. Gracias.' },
 ];
 
 const Chats = () => {
