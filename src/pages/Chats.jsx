@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/useAuth';
+import { useNavigate } from 'react-router-dom';
 import ChatSidebar from '../components/ChatSidebar';
 import ChatHeader from '../components/ChatHeader';
 import ChatMessages from '../components/ChatMessages';
@@ -70,6 +72,9 @@ const dummyMessages = [
 ];
 
 const Chats = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
   const [user] = useState(dummyUser);
   const [chats] = useState(dummyChats);
   const [activeChat, setActiveChat] = useState(chats[0]);
@@ -104,6 +109,12 @@ const Chats = () => {
     setShowPerfilContacto(false);
   };
 
+  // Función logout real para pasar a ChatSidebar
+  const handleLogout = () => {
+    logout();        // limpia tokens y estado auth
+    navigate('/');   // redirige a login
+  };
+
   // Pasa estas funciones a ChatSidebar y ChatHeader
   return (
     <div
@@ -123,8 +134,8 @@ const Chats = () => {
             chats={chats}
             activeChat={activeChat}
             onSelectChat={setActiveChat}
-            onViewProfile={abrirPerfilUsuario} // botón ver perfil usuario
-            onLogout={() => alert('Cerrar sesión')} // ejemplo
+            onViewProfile={abrirPerfilUsuario}
+            onLogout={handleLogout}
           />
 
           <section className="d-flex flex-column flex-grow-1" style={{ height: '100vh' }}>

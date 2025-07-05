@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaComments, FaUser } from 'react-icons/fa';
-import { login } from '../api/auth';
+import { login as apiLogin } from '../api/auth';
+import { useAuth } from '../context/useAuth'; // tu hook para usar contexto Auth
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();  // extraemos login del contexto para actualizar estado global
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -12,9 +15,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { accessToken, refreshToken } = await login(username, password);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
+      const tokens = await apiLogin(username, password);
+      console.log('Tokens recibidos:', tokens);
+
+      // Actualizamos estado global llamando al login del contexto:
+      login(tokens.accessToken, tokens.refreshToken);
+
+      // Navegamos al chat sólo después de actualizar el estado global
       navigate('/chats');
     } catch (error) {
       alert('Credenciales inválidas o error de conexión');
@@ -34,16 +41,13 @@ const Login = () => {
         className="card shadow-lg p-4"
         style={{ maxWidth: '400px', width: '100%', borderRadius: '1rem' }}
       >
-        {/* Título o logo */}
         <div className="text-center mb-4">
           <FaComments size={40} className="text-primary mb-2" />
           <h2 className="fw-bold text-primary mb-0">MensajeríaApp</h2>
           <p className="text-muted small">Conéctate con quien quieras</p>
         </div>
 
-        {/* Formulario */}
         <form onSubmit={handleSubmit}>
-          {/* username */}
           <div className="mb-3">
             <label htmlFor="username" className="form-label fw-semibold">
               Correo electrónico
@@ -60,11 +64,11 @@ const Login = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                autoComplete="username"
               />
             </div>
           </div>
 
-          {/* Contraseña */}
           <div className="mb-4">
             <label htmlFor="password" className="form-label fw-semibold">
               Contraseña
@@ -81,25 +85,25 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autoComplete="current-password"
               />
               <button
                 type="button"
                 className="btn btn-outline-secondary"
                 onClick={() => setShowPassword(!showPassword)}
                 tabIndex={-1}
+                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
           </div>
 
-          {/* Botón Ingresar */}
           <button type="submit" className="btn btn-primary w-100 py-2 fw-bold">
             Ingresar
           </button>
         </form>
 
-        {/* Links */}
         <div className="mt-3 text-center">
           <Link to="/forgot-password" className="text-decoration-none d-block mb-1">
             ¿Olvidaste tu contraseña?

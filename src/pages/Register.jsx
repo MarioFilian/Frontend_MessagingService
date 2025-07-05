@@ -1,28 +1,50 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
+import { register } from '../api/auth'; // Ajusta la ruta si es necesario
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
 
-    // Validación simple
     if (password !== confirm) {
       setError('Las contraseñas no coinciden');
       return;
     }
 
-    // Aquí deberías enviar los datos al backend (API)
-    // Simulación de registro exitoso:
-    navigate('/chats');
+    if (!username.trim() || !firstName.trim() || !lastName.trim()) {
+      setError('Completa todos los campos');
+      return;
+    }
+
+    try {
+      const { accessToken, refreshToken } = await register({
+        username,
+        password,
+        email,
+        firstName,
+        lastName,
+        role: 'USER',
+      });
+
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+
+      navigate('/chats');
+    } catch (err) {
+      setError(err.message || 'Error en el registro');
+    }
   };
 
   return (
@@ -44,24 +66,52 @@ const Register = () => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Nombre */}
+          {/* Username */}
           <div className="mb-3">
-            <label htmlFor="name" className="form-label fw-semibold">Nombre completo</label>
+            <label htmlFor="username" className="form-label fw-semibold">Nombre de usuario</label>
             <div className="input-group">
               <span className="input-group-text bg-white"><FaUser /></span>
               <input
                 type="text"
                 className="form-control"
-                id="name"
-                placeholder="Juan Pérez"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                id="username"
+                placeholder="jdoe23"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>
           </div>
 
-          {/* Correo */}
+          {/* Nombre */}
+          <div className="mb-3">
+            <label htmlFor="firstName" className="form-label fw-semibold">Nombre</label>
+            <input
+              type="text"
+              className="form-control"
+              id="firstName"
+              placeholder="John"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Apellido */}
+          <div className="mb-3">
+            <label htmlFor="lastName" className="form-label fw-semibold">Apellido</label>
+            <input
+              type="text"
+              className="form-control"
+              id="lastName"
+              placeholder="Doe"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Email */}
           <div className="mb-3">
             <label htmlFor="email" className="form-label fw-semibold">Correo electrónico</label>
             <div className="input-group">
@@ -112,14 +162,12 @@ const Register = () => {
             </div>
           </div>
 
-          {/* Error */}
           {error && (
             <div className="alert alert-danger py-2 text-center">
               {error}
             </div>
           )}
 
-          {/* Botón */}
           <button type="submit" className="btn btn-primary w-100 fw-bold py-2">
             Registrarse
           </button>
