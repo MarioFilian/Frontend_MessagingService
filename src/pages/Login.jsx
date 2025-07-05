@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaComments } from 'react-icons/fa';
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaComments, FaUser } from 'react-icons/fa';
+import { login } from '../api/auth';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Lógica real de login
-    navigate('/chats');
+    try {
+      const { accessToken, refreshToken } = await login(username, password);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      navigate('/chats');
+    } catch (error) {
+      alert('Credenciales inválidas o error de conexión');
+      console.error(error);
+    }
   };
 
   return (
@@ -35,22 +43,22 @@ const Login = () => {
 
         {/* Formulario */}
         <form onSubmit={handleSubmit}>
-          {/* Email */}
+          {/* username */}
           <div className="mb-3">
-            <label htmlFor="email" className="form-label fw-semibold">
+            <label htmlFor="username" className="form-label fw-semibold">
               Correo electrónico
             </label>
             <div className="input-group">
               <span className="input-group-text bg-white">
-                <FaEnvelope />
+                <FaUser />
               </span>
               <input
-                type="email"
+                type="text"
                 className="form-control"
-                id="email"
-                placeholder="usuario@ejemplo.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                placeholder="Nombre de usuario"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>
