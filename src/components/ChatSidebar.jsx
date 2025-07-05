@@ -44,7 +44,6 @@ const ChatSidebar = ({
             className="btn btn-link btn-sm text-white p-0"
             style={{ boxShadow: 'none' }}
           >
-            <FaEllipsisV />
           </Dropdown.Toggle>
 
           <Dropdown.Menu variant="dark" align="end">
@@ -100,7 +99,6 @@ const ChatSidebar = ({
                 className="btn btn-link btn-sm text-white p-0 ms-2"
                 style={{ boxShadow: 'none' }}
               >
-                <FaEllipsisV />
               </Dropdown.Toggle>
 
               <Dropdown.Menu variant="dark" align="end">
