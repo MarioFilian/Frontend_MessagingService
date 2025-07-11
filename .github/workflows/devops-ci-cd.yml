@@ -70,6 +70,6 @@ jobs:
             # Descargar imagen y levantar contenedor actualizado
             sudo docker pull ${{ env.IMAGE_NAME }}:latest
             sudo docker run -d --name ${{ env.CONTAINER_NAME }} \
-              -e API_GATEWAY=${{ env.ENV_API_GATEWAY }} \
+              -e VITE_API_GATEWAY=${{ env.ENV_API_GATEWAY }} \
               -p 80:80 \
               ${{ env.IMAGE_NAME }}:latest
